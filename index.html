@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2차원 크로마토그래피 비교: 3초 vs 30초 광합성</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+  :root { --ink:#26251f; --muted:#6b6a63; --line:#d9d7cd; --bg:#fbfaf7; --accent:#185FA5; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:'Noto Sans KR',system-ui,sans-serif; }
+  .wrap { max-width:1240px; margin:0 auto; padding:24px 20px 32px; }
+  .stage { background:#fff; border:1px solid var(--line); border-radius:14px; overflow:hidden; }
+  svg { display:block; width:100%; height:auto; }
+  svg text { font-family:'Noto Sans KR',system-ui,sans-serif; }
+  .bar { display:flex; align-items:center; gap:10px; margin-top:12px; }
+  button { font:inherit; font-size:16px; border:1px solid var(--line); background:#fff; border-radius:8px; padding:7px 14px; cursor:pointer; color:var(--ink); }
+  button:hover { background:#f3f2ec; }
+  .track { position:relative; flex:1; height:30px; cursor:pointer; }
+  .rail { position:absolute; left:0; right:0; top:13px; height:4px; background:#e8e6de; border-radius:2px; }
+  .fill { position:absolute; left:0; top:13px; height:4px; background:var(--accent); border-radius:2px; width:0; }
+  .tick { position:absolute; top:13px; width:2px; height:8px; margin-top:-2px; background:#c9c7bd; }
+  .pair { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; }
+  .ttl { font-size:27px; font-weight:700; color:#26251f; margin:0 0 12px 2px; letter-spacing:-0.01em; }
+  .stage, .ttl { transition: opacity .4s ease; }
+  #pp, .pp, #rs, .rs { width:44px; height:40px; padding:0; display:inline-flex; align-items:center; justify-content:center; }
+  button svg { display:block; width:18px; height:18px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="pair">
+    <div class="panel" id="p3">
+      <div class="ttl"><sup style="font-size:0.62em">14</sup>CO<sub style="font-size:0.62em">2</sub>로 3초 동안 광합성</div>
+      <div class="stage" id="s3" style="cursor:pointer"><svg viewBox="200 135 560 495" data-id="svg" >
+      <defs>
+        <marker id="ahA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L9 5L1 9z" fill="#378ADD"/></marker>
+        <marker id="ahB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L9 5L1 9z" fill="#D18A1F"/></marker>
+        <radialGradient id="spotGrad">
+          <stop offset="0" stop-color="#3d3c38" stop-opacity="0.9"/>
+          <stop offset="0.5" stop-color="#4a4945" stop-opacity="0.7"/>
+          <stop offset="0.8" stop-color="#76756f" stop-opacity="0.2"/>
+          <stop offset="1" stop-color="#888780" stop-opacity="0"/>
+        </radialGradient>
+        <clipPath id="plateClip"><rect x="0" y="0" width="240" height="240" rx="4"/></clipPath>
+      </defs>
+      <g data-id="world">
+        <!-- tank backs -->
+        <g data-id="tankBackA">
+          <rect x="330" y="530" width="300" height="60" rx="4" fill="#f2f6f9"/>
+          <path d="M330 550 H630 V586 A4 4 0 0 1 626 590 H334 A4 4 0 0 1 330 586 Z" fill="#378ADD" opacity="0.45"/>
+        </g>
+        <g data-id="tankBackB" opacity="0">
+          <rect x="330" y="530" width="300" height="60" rx="4" fill="#fbf6ee"/>
+          <path d="M330 550 H630 V586 A4 4 0 0 1 626 590 H334 A4 4 0 0 1 330 586 Z" fill="#EF9F27" opacity="0.5"/>
+        </g>
+
+        <!-- plate -->
+        <g data-id="plate">
+          <rect x="0" y="0" width="240" height="240" rx="4" fill="#fdfcf8" stroke="#bcbab0" stroke-width="1.2"/>
+          <g clip-path="url(#plateClip)">
+            <rect data-id="wet1" x="240" y="0" width="0" height="240" fill="#378ADD" opacity="0.2"/>
+            <rect data-id="wet2" x="0" y="240" width="240" height="0" fill="#EF9F27" opacity="0.22"/>
+          </g>
+          <line data-id="front1" x1="0" x2="0" y1="3" y2="237" stroke="#378ADD" stroke-width="1.2" stroke-dasharray="5 4" opacity="0"/>
+          <line data-id="front2" x1="3" x2="237" y1="240" y2="240" stroke="#BA7517" stroke-width="1.2" stroke-dasharray="5 4" opacity="0"/>
+          <line x1="204" x2="204" y1="6" y2="234" stroke="#cfcdc3" stroke-width="0.8" stroke-dasharray="2 3"/>
+          <line data-id="startLine2" x1="6" x2="234" y1="204" y2="204" stroke="#cfcdc3" stroke-width="0.8" stroke-dasharray="2 3" opacity="0"/>
+          <g data-id="spots"></g>
+          <g data-id="spotLabels"></g>
+        </g>
+
+        <g data-id="vapor" stroke="#8fa3b3" stroke-width="1.6" fill="none" stroke-linecap="round">
+            <path data-id="w0" d="M568 0 q7 -9 0 -18 q-7 -9 0 -18 q7 -9 0 -18"/>
+            <path data-id="w1" d="M436 0 q7 -9 0 -18 q-7 -9 0 -18 q7 -9 0 -18"/>
+            <path data-id="w2" d="M480 0 q7 -9 0 -18 q-7 -9 0 -18 q7 -9 0 -18"/>
+            <path data-id="w3" d="M524 0 q7 -9 0 -18 q-7 -9 0 -18 q7 -9 0 -18"/>
+            <path data-id="w4" d="M470 0 q7 -9 0 -18 q-7 -9 0 -18 q7 -9 0 -18"/>
+        </g>
+
+        <!-- tank fronts -->
+        <g data-id="tankFrontA">
+          <path d="M330 550 H630 V586 A4 4 0 0 1 626 590 H334 A4 4 0 0 1 330 586 Z" fill="#378ADD" opacity="0.3"/>
+          <line x1="330" x2="630" y1="550" y2="550" stroke="#378ADD" stroke-width="1.5"/>
+          <rect x="330" y="530" width="300" height="60" rx="4" fill="none" stroke="#85B7EB" stroke-width="2"/>
+          <circle cx="612" cy="571" r="3" fill="#185FA5"/>
+          <line x1="612" y1="571" x2="660" y2="571" stroke="#185FA5" stroke-width="1.5"/>
+          <text x="668" y="571" dominant-baseline="central" font-size="17" font-weight="500" fill="#185FA5">용매 A</text>
+        </g>
+        <g data-id="tankFrontB" opacity="0">
+          <path d="M330 550 H630 V586 A4 4 0 0 1 626 590 H334 A4 4 0 0 1 330 586 Z" fill="#EF9F27" opacity="0.35"/>
+          <line x1="330" x2="630" y1="550" y2="550" stroke="#BA7517" stroke-width="1.5"/>
+          <rect x="330" y="530" width="300" height="60" rx="4" fill="none" stroke="#EF9F27" stroke-width="2"/>
+          <circle cx="612" cy="571" r="3" fill="#A86A12"/>
+          <line x1="612" y1="571" x2="660" y2="571" stroke="#A86A12" stroke-width="1.5"/>
+          <text x="668" y="571" dominant-baseline="central" font-size="17" font-weight="500" fill="#A86A12">용매 B</text>
+        </g>
+
+
+        <!-- pipette -->
+        <g data-id="pipette" opacity="0">
+          <rect x="391" y="0" width="10" height="90" rx="3" fill="#e6e4dc" stroke="#a9a79d"/>
+          <path d="M391 90 L401 90 L397.5 116 L394.5 116 Z" fill="#e6e4dc" stroke="#a9a79d"/>
+        </g>
+        <circle data-id="drop" cx="396" cy="0" r="4" fill="#5f5e5a" opacity="0"/>
+
+        <!-- final axes -->
+        <g data-id="axes" opacity="0">
+          <line x1="652" y1="567" x2="277" y2="567" stroke="#378ADD" stroke-width="2" marker-end="url(#ahA)"/>
+          <text x="465" y="610" text-anchor="middle" font-size="22" font-weight="500" fill="#46453f">1차 전개 · 용매 A</text>
+          <line x1="685" y1="536" x2="685" y2="162" stroke="#D18A1F" stroke-width="2" marker-end="url(#ahB)"/>
+          <text transform="translate(722 347) rotate(-90)" text-anchor="middle" font-size="22" font-weight="500" fill="#46453f">2차 전개 · 용매 B</text>
+        </g>
+
+      </g>
+    </svg></div>
+      <div class="bar">
+        <button class="pp"></button>
+        <button class="rs"></button>
+        <div class="track"><div class="rail"></div><div class="fill"></div></div>
+      </div>
+    </div>
+    <div class="panel" id="p30">
+      <div class="ttl"><sup style="font-size:0.62em">14</sup>CO<sub style="font-size:0.62em">2</sub>로 30초 동안 광합성</div>
+      <div class="stage" id="s30" style="cursor:pointer"><svg viewBox="200 135 560 495" data-id="svg" >
+      <defs>
+        <marker id="ahA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L9 5L1 9z" fill="#378ADD"/></marker>
+        <marker id="ahB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L9 5L1 9z" fill="#D18A1F"/></marker>
+        <radialGradient id="spotGrad">
+          <stop offset="0" stop-color="#3d3c38" stop-opacity="0.9"/>
+          <stop offset="0.5" stop-color="#4a4945" stop-opacity="0.7"/>
+          <stop offset="0.8" stop-color="#76756f" stop-opacity="0.2"/>
+          <stop offset="1" stop-color="#888780" stop-opacity="0"/>
+        </radialGradient>
+        <clipPath id="plateClip"><rect x="0" y="0" width="240" height="240" rx="4"/></clipPath>
+      </defs>
+      <g data-id="world">
+        <!-- tank backs -->
+        <g data-id="tankBackA">
+          <rect x="330" y="530" width="300" height="60" rx="4" fill="#f2f6f9"/>
+          <path d="M330 550 H630 V586 A4 4 0 0 1 626 590 H334 A4 4 0 0 1 330 586 Z" fill="#378ADD" opacity="0.45"/>
+        </g>
+        <g data-id="tankBackB" opacity="0">
+          <rect x="330" y="530" width="300" height="60" rx="4" fill="#fbf6ee"/>
+          <path d="M330 550 H630 V586 A4 4 0 0 1 626 590 H334 A4 4 0 0 1 330 586 Z" fill="#EF9F27" opacity="0.5"/>
+        </g>
+
+        <!-- plate -->
+        <g data-id="plate">
+          <rect x="0" y="0" width="240" height="240" rx="4" fill="#fdfcf8" stroke="#bcbab0" stroke-width="1.2"/>
+          <g clip-path="url(#plateClip)">
+            <rect data-id="wet1" x="240" y="0" width="0" height="240" fill="#378ADD" opacity="0.2"/>
+            <rect data-id="wet2" x="0" y="240" width="240" height="0" fill="#EF9F27" opacity="0.22"/>
+          </g>
+          <line data-id="front1" x1="0" x2="0" y1="3" y2="237" stroke="#378ADD" stroke-width="1.2" stroke-dasharray="5 4" opacity="0"/>
+          <line data-id="front2" x1="3" x2="237" y1="240" y2="240" stroke="#BA7517" stroke-width="1.2" stroke-dasharray="5 4" opacity="0"/>
+          <line x1="204" x2="204" y1="6" y2="234" stroke="#cfcdc3" stroke-width="0.8" stroke-dasharray="2 3"/>
+          <line data-id="startLine2" x1="6" x2="234" y1="204" y2="204" stroke="#cfcdc3" stroke-width="0.8" stroke-dasharray="2 3" opacity="0"/>
+          <g data-id="spots"></g>
+          <g data-id="spotLabels"></g>
+        </g>
+
+        <g data-id="vapor" stroke="#8fa3b3" stroke-width="1.6" fill="none" stroke-linecap="round">
+            <path data-id="w0" d="M568 0 q7 -9 0 -18 q-7 -9 0 -18 q7 -9 0 -18"/>
+            <path data-id="w1" d="M436 0 q7 -9 0 -18 q-7 -9 0 -18 q7 -9 0 -18"/>
+            <path data-id="w2" d="M480 0 q7 -9 0 -18 q-7 -9 0 -18 q7 -9 0 -18"/>
+            <path data-id="w3" d="M524 0 q7 -9 0 -18 q-7 -9 0 -18 q7 -9 0 -18"/>
+            <path data-id="w4" d="M470 0 q7 -9 0 -18 q-7 -9 0 -18 q7 -9 0 -18"/>
+        </g>
+
+        <!-- tank fronts -->
+        <g data-id="tankFrontA">
+          <path d="M330 550 H630 V586 A4 4 0 0 1 626 590 H334 A4 4 0 0 1 330 586 Z" fill="#378ADD" opacity="0.3"/>
+          <line x1="330" x2="630" y1="550" y2="550" stroke="#378ADD" stroke-width="1.5"/>
+          <rect x="330" y="530" width="300" height="60" rx="4" fill="none" stroke="#85B7EB" stroke-width="2"/>
+          <circle cx="612" cy="571" r="3" fill="#185FA5"/>
+          <line x1="612" y1="571" x2="660" y2="571" stroke="#185FA5" stroke-width="1.5"/>
+          <text x="668" y="571" dominant-baseline="central" font-size="17" font-weight="500" fill="#185FA5">용매 A</text>
+        </g>
+        <g data-id="tankFrontB" opacity="0">
+          <path d="M330 550 H630 V586 A4 4 0 0 1 626 590 H334 A4 4 0 0 1 330 586 Z" fill="#EF9F27" opacity="0.35"/>
+          <line x1="330" x2="630" y1="550" y2="550" stroke="#BA7517" stroke-width="1.5"/>
+          <rect x="330" y="530" width="300" height="60" rx="4" fill="none" stroke="#EF9F27" stroke-width="2"/>
+          <circle cx="612" cy="571" r="3" fill="#A86A12"/>
+          <line x1="612" y1="571" x2="660" y2="571" stroke="#A86A12" stroke-width="1.5"/>
+          <text x="668" y="571" dominant-baseline="central" font-size="17" font-weight="500" fill="#A86A12">용매 B</text>
+        </g>
+
+
+        <!-- pipette -->
+        <g data-id="pipette" opacity="0">
+          <rect x="391" y="0" width="10" height="90" rx="3" fill="#e6e4dc" stroke="#a9a79d"/>
+          <path d="M391 90 L401 90 L397.5 116 L394.5 116 Z" fill="#e6e4dc" stroke="#a9a79d"/>
+        </g>
+        <circle data-id="drop" cx="396" cy="0" r="4" fill="#5f5e5a" opacity="0"/>
+
+        <!-- final axes -->
+        <g data-id="axes" opacity="0">
+          <line x1="652" y1="567" x2="277" y2="567" stroke="#378ADD" stroke-width="2" marker-end="url(#ahA)"/>
+          <text x="465" y="610" text-anchor="middle" font-size="22" font-weight="500" fill="#46453f">1차 전개 · 용매 A</text>
+          <line x1="685" y1="536" x2="685" y2="162" stroke="#D18A1F" stroke-width="2" marker-end="url(#ahB)"/>
+          <text transform="translate(722 347) rotate(-90)" text-anchor="middle" font-size="22" font-weight="500" fill="#46453f">2차 전개 · 용매 B</text>
+        </g>
+
+      </g>
+    </svg></div>
+      <div class="bar">
+        <button class="pp"></button>
+        <button class="rs"></button>
+        <div class="track"><div class="rail"></div><div class="fill"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const ICON = {
+  play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 4.8v14.4a.8.8 0 0 0 1.2.7l11.6-7.2a.8.8 0 0 0 0-1.4L8.7 4.1a.8.8 0 0 0-1.2.7z" fill="currentColor"/></svg>',
+  pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4.5" width="4.2" height="15" rx="1.2" fill="currentColor"/><rect x="13.8" y="4.5" width="4.2" height="15" rx="1.2" fill="currentColor"/></svg>',
+  restart: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="2.6" height="14" rx="1" fill="currentColor"/><path d="M19 6.1v11.8a.8.8 0 0 1-1.2.7L9.2 12.7a.8.8 0 0 1 0-1.4l8.6-5.9a.8.8 0 0 1 1.2.7z" fill="currentColor"/></svg>'
+};
+function setPP(btn, on) { btn.innerHTML = on ? ICON.pause : ICON.play; const l = on ? '일시정지' : '재생'; btn.setAttribute('aria-label', l); btn.title = l; }
+function setRS(btn) { btn.innerHTML = ICON.restart; btn.setAttribute('aria-label', '처음부터'); btn.title = '처음부터'; }
+
+const T = 28;
+const NS = 'http://www.w3.org/2000/svg';
+const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent && parent.appendChild(e); return e; };
+const clamp = x => Math.max(0, Math.min(1, x));
+const ease = x => x<.5 ? 2*x*x : 1-Math.pow(-2*x+2,2)/2;
+const R = (t,a,b) => clamp((t-a)/(b-a));
+const E = (t,a,b) => ease(R(t,a,b));
+const dev = x => 1-Math.pow(1-x,1.6);
+const lerp = (a,b,p) => a+(b-a)*p;
+
+
+const OUT = 200, IN = 322, FINAL = 227, PX = 360;
+const L = 182;
+
+
+function Scene(root, IMG) {
+  const $ = id => root.querySelector('[data-id="'+id+'"]');
+  const O = {x:204, y:204};
+const toLx = v => 26 + (v-30)*0.6, toLy = v => 26 + (v-30)*0.6;
+const C = IMG.map(c => ({n:c.n, rf:c.d*0.62, serif:c.serif, dx:O.x-toLx(c.sx), dy:O.y-toLy(c.sy), lox:(c.lx-c.sx)*0.6, loy:(c.ly-c.sy)*0.6}));
+
+const spotEls = C.map(c => ({
+  dot: mk('circle', {fill:'url(#spotGrad)'}, $('spots')),
+  lab: mk('text', {'font-size':13.5, fill:'#3d3c38', 'text-anchor':'middle', 'dominant-baseline':'central'}, $('spotLabels'))
+}));
+spotEls.forEach((e,i) => { e.lab.textContent = C[i].n; if (C[i].serif) e.lab.setAttribute('style', "font-family:'Times New Roman',Times,serif;font-size:15.5px"); });
+
+
+  function frame(t){
+  // plate vertical position and rotation
+  let py = OUT;
+  py = lerp(py, IN, E(t,2.8,4.0));
+  py = lerp(py, OUT, E(t,10.0,11.2));
+  py = lerp(py, IN, E(t,13.6,14.8));
+  py = lerp(py, OUT, E(t,20.8,22.0));
+  py = lerp(py, FINAL, E(t,23.5,24.7));
+  let rot = 90;
+  rot = lerp(rot, 0, E(t,12.4,13.5));
+  const sc = lerp(1, 1.6, E(t,23.5,24.7));
+  const px = PX - 15*E(t,23.5,24.7);
+  $('plate').setAttribute('transform', `translate(${px} ${py}) translate(120 120) scale(${sc}) translate(-120 -120) rotate(${rot} 120 120)`);
+
+  // tank swap: tank 1 slides out left, tank 2 slides in from right
+  const sw = E(t,12.3,13.5), tf = 1 - E(t,23.4,24.4);
+  const ax = -sw*360, bx = (1-sw)*360;
+  ['tankBackA','tankFrontA'].forEach(id => { $(id).setAttribute('transform', `translate(${ax} 0)`); $(id).setAttribute('opacity', 1-sw); });
+  ['tankBackB','tankFrontB'].forEach(id => { $(id).setAttribute('transform', `translate(${bx} 0)`); $(id).setAttribute('opacity', sw*tf); });
+
+  // development progress
+  const t1 = dev(R(t,4.0,10.0)), t2 = dev(R(t,14.8,20.8));
+  const f1 = t1*222;
+  const dry1 = E(t,11.1,12.4);
+  $('wet1').setAttribute('x', 240-f1); $('wet1').setAttribute('width', f1); $('wet1').setAttribute('opacity', .2*(1-dry1));
+  $('front1').setAttribute('x1', 240-f1); $('front1').setAttribute('x2', 240-f1); $('front1').setAttribute('opacity', t1>0 ? 1-dry1*.75 : 0);
+  const f2 = 240 - t2*222;
+  const dry2 = E(t,22.1,23.4);
+  $('wet2').setAttribute('y', f2); $('wet2').setAttribute('height', 240-f2); $('wet2').setAttribute('opacity', .2*(1-dry2));
+  $('front2').setAttribute('y1', f2); $('front2').setAttribute('y2', f2); $('front2').setAttribute('opacity', t2>0 ? 1-dry2*.75 : 0);
+  $('startLine2').setAttribute('opacity', E(t,13.0,13.6));
+
+  // vapor (drying): screen-space wisps rising continuously, independent of plate rotation
+  const W = [[11.1,12.5],[22.0,23.4]];
+  const win = W.find(w => t>w[0] && t<w[1]);
+  [0,1,2,3,4].forEach(i => {
+    const w = $('w'+i);
+    if (!win) { w.setAttribute('opacity', 0); return; }
+    const env = Math.sin(R(t,win[0],win[1])*Math.PI);
+    const ph = [0,.45,.2,.7,.35][i];
+    const k = (((t-win[0])*1.1 + ph) % 1 + 1) % 1;
+    w.setAttribute('transform', `translate(0 ${418 - k*190})`);
+    w.setAttribute('opacity', env*Math.sin(k*Math.PI)*.9);
+  });
+
+  // pipette & drop
+  const pIn = E(t,0.6,1.3), pOut = E(t,2.0,2.6);
+  const pipY = lerp(-120, 276, pIn) - pOut*420;
+  $('pipette').setAttribute('transform', `translate(0 ${pipY})`);
+  $('pipette').setAttribute('opacity', t<2.7 && t>0.5 ? 1 : 0);
+  const dp = R(t,1.4,1.85);
+  $('drop').setAttribute('cy', 392 + dp*12);
+  $('drop').setAttribute('opacity', dp>0 && dp<1 ? 1 : 0);
+  const spotGrow = E(t,1.8,2.3);
+
+  // spots: all one gray color; overlap of near-equal Rf makes an elongated blob
+  const p1 = clamp((t1-0.16)/0.84), p2 = clamp((t2-0.16)/0.84);
+    $('spots').setAttribute('opacity', .9);
+  const pos = C.map((c,i) => {
+    const x = O.x - p1*c.dx, y = O.y - p2*c.dy;
+    const r = Math.max(5, c.rf*(0.8 + 0.2*Math.max(p1,p2))) * spotGrow;
+    const e = spotEls[i];
+    e.dot.setAttribute('cx', x); e.dot.setAttribute('cy', y); e.dot.setAttribute('r', Math.max(0,r));
+    e.lab.setAttribute('x', x + c.lox); e.lab.setAttribute('y', y + c.loy);
+    e.lab.setAttribute('opacity', E(t,24.8,25.6));
+    return {x,y};
+  });
+
+  // visible spot count by clustering
+  let n = 0;
+  if (spotGrow > 0.1) {
+    const seen = [];
+    pos.forEach(p => { if (!seen.some(q => Math.hypot(p.x-q.x, p.y-q.y) < 12)) seen.push(p); });
+    n = seen.length;
+  }
+
+  $('axes').setAttribute('opacity', E(t,24.8,25.6));
+  $('world').setAttribute('opacity', 1 - E(t,27.2,28));
+
+}
+
+
+  return frame;
+}
+const scenes = [
+  Scene(document.getElementById('s3'), [
+  {n:'3PG', sx:273, sy:241.5, lx:232, ly:239, d:12, serif:1}
+]),
+  Scene(document.getElementById('s30'), [
+  {n:'알라닌',     sx:38,    sy:82,    lx:57.5,  ly:56.5,  d:12},
+  {n:'글루탐산',   sx:190,   sy:51,    lx:190,   ly:26,    d:6},
+  {n:'시트르산',   sx:258,   sy:32,    lx:278.5, ly:51.5,  d:6},
+  {n:'세린',       sx:156,   sy:116,   lx:150.5, ly:90,    d:12},
+  {n:'글라이신',   sx:97,    sy:116,   lx:92,    ly:141,   d:12},
+  {n:'아스파트산', sx:213.5, sy:151.5, lx:251.5, ly:123.5, d:15},
+  {n:'PGAL',       sx:207,   sy:211,   lx:209.5, ly:184,   d:12, serif:1},
+  {n:'3PG',        sx:275.5, sy:248,   lx:235.5, ly:249.5, d:16, serif:1},
+  {n:'설탕',       sx:93,    sy:214.5, lx:97,    ly:239,   d:6},
+  {n:'6탄당인산',  sx:213,   sy:317,   lx:207,   ly:289,   d:12}
+])
+];
+const END = 27.0;
+const panels = [['3',0],['30',1]].map(([k,i]) => {
+  const root = document.getElementById('p'+k);
+  const st = {time:0, playing:false, f:scenes[i], root,
+    pp: root.querySelector('.pp'), rs: root.querySelector('.rs'),
+    track: root.querySelector('.track'), fill: root.querySelector('.fill'),
+    stage: root.querySelector('.stage'), ttl: root.querySelector('.ttl')};
+  [0,2.8,10.0,13.6,20.8].forEach(t0 => { const d = document.createElement('div'); d.className = 'tick'; d.style.left = (t0/END*100)+'%'; st.track.appendChild(d); });
+  const toggle = () => {
+    if (!st.playing && st.time >= END) st.time = 0;
+    st.playing = !st.playing;
+    setPP(st.pp, st.playing);
+  };
+  st.pp.onclick = toggle;
+  root.querySelector('.stage').onclick = toggle;
+  st.rs.onclick = () => { st.time = 0; st.playing = false; setPP(st.pp, false); };
+  setPP(st.pp, false); setRS(st.rs);
+  st.track.onclick = e => { const r = st.track.getBoundingClientRect(); st.time = clamp((e.clientX - r.left)/r.width) * END; };
+  return st;
+});
+let last = null;
+function loop(now){
+  if (last === null) last = now;
+  const dt = (now - last)/1000; last = now;
+  panels.forEach(p => {
+    if (p.playing) { p.time += dt; if (p.time >= END) { p.time = END; p.playing = false; setPP(p.pp, false); } }
+    p.f(p.time);
+    p.fill.style.width = (p.time/END*100) + '%';
+    const on = p.playing || p.time > 0;
+    const o = on ? '1' : '0.35';
+    if (p.stage.style.opacity !== o) { p.stage.style.opacity = o; p.ttl.style.opacity = on ? '1' : '0.5'; }
+  });
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
